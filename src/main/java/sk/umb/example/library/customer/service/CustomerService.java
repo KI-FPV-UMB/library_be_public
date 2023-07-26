@@ -5,36 +5,42 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import sk.umb.example.library.address.persistence.entity.AddressEntity;
-import sk.umb.example.library.address.persistence.repository.AddressRepository;
 import sk.umb.example.library.address.service.AddressDetailDto;
 import sk.umb.example.library.customer.persistence.entity.CustomerEntity;
-import sk.umb.example.library.customer.persistence.repository.CustomerRepository;
-import sk.umb.example.library.exception.LibraryApplicationException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CustomerService {
-    private final CustomerRepository customerRepository;
-    private final AddressRepository addressRepository;
+//    private final CustomerRepository customerRepository;
+//    private final AddressRepository addressRepository;
 
-    public CustomerService(CustomerRepository customerRepository,
-                           AddressRepository addressRepository) {
-        this.customerRepository = customerRepository;
-        this.addressRepository = addressRepository;
+    private final CustomerServiceClient customerServiceClient;
+
+    public CustomerService(CustomerServiceClient customerServiceClient) {
+        this.customerServiceClient = customerServiceClient;
+    }
+
+//    public CustomerService(CustomerRepository customerRepository,
+//                           AddressRepository addressRepository) {
+//        this.customerRepository = customerRepository;
+//        this.addressRepository = addressRepository;
+//    }
+
+    public String sayHelloProxyCall() {
+        return customerServiceClient.sayHello();
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CustomerDetailDto> getAllCustomers() {
-        return mapToDtoList(customerRepository.findAll());
+//        return mapToDtoList(customerRepository.findAll());
+        return Collections.EMPTY_LIST;
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CustomerDetailDto> searchCustomerByLastName(String lastName) {
-        return mapToDtoList(customerRepository.findByLastName(lastName));
+//        return mapToDtoList(customerRepository.findByLastName(lastName));
+        return Collections.EMPTY_LIST;
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -46,7 +52,8 @@ public class CustomerService {
     @PreAuthorize("hasRole('ROLE_USER')")
     public Long createCustomer(CustomerRequestDto customerRequestDto) {
         CustomerEntity entity = mapToEntity(customerRequestDto);
-        return customerRepository.save(entity).getId();
+//        return customerRepository.save(entity).getId();
+        return 1L;
     }
 
     @Transactional
@@ -66,35 +73,36 @@ public class CustomerService {
             customer.setEmailContact(customerRequestDTO.getEmailContact());
         }
 
-        customerRepository.save(customer);
+//        customerRepository.save(customer);
     }
 
     @Transactional
     @PreAuthorize("hasRole('ROLE_USER')")
     public void deleteCustomer(Long customerId) {
-        customerRepository.deleteById(customerId);
+//        customerRepository.deleteById(customerId);
     }
 
     private CustomerEntity getCustomerEntityById(Long customerId) {
-        Optional<CustomerEntity> customer = customerRepository.findById(customerId);
-
-        if (customer.isEmpty()) {
-            throw new LibraryApplicationException("Customer not found. ID: " + customerId);
-        }
-
-        return customer.get();
+//        Optional<CustomerEntity> customer = customerRepository.findById(customerId);
+//
+//        if (customer.isEmpty()) {
+//            throw new LibraryApplicationException("Customer not found. ID: " + customerId);
+//        }
+//
+//        return customer.get();
+        return null;
     }
 
     private CustomerEntity mapToEntity(CustomerRequestDto dto) {
         CustomerEntity customer = new CustomerEntity();
 
-        Optional<AddressEntity> address = addressRepository.findById(dto.getAddressId());
+//        Optional<AddressEntity> address = addressRepository.findById(dto.getAddressId());
 
-        if (address.isPresent()) {
-            customer.setAddress(address.get());
-        } else {
-            throw new LibraryApplicationException("AddressId is invalid.");
-        }
+//        if (address.isPresent()) {
+//            customer.setAddress(address.get());
+//        } else {
+//            throw new LibraryApplicationException("AddressId is invalid.");
+//        }
 
         customer.setFirstName(dto.getFirstName());
         customer.setLastName(dto.getLastName());
