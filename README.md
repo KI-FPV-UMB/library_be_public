@@ -6,6 +6,48 @@
 * Dockerfile
 * Docker compose
 
+### Recommended approach:
+#### Dockerfile
+
+* Create Dockerfile with content:
+
+```dockerfile
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /app
+
+COPY target/library-0.0.1-SNAPSHOT.jar /app/library-app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/app/library-app.jar"]
+```
+
+* Initialise build using docker command line:
+
+```shell
+docker build -t library-app-image .
+```
+
+The command will create docker image with name library-app-image.
+
+* Build image using Maven.
+Inspect the pom.xml present in the project and look for the section:
+
+```.xml
+<plugin>
+    <groupId>com.spotify</groupId>
+    <artifactId>dockerfile-maven-plugin</artifactId>
+    <version>1.4.13</version>
+    ...
+</plugin>			
+```
+
+This plugin is responsible for building docker images. The docket image will be built after the application was built using the mvn clean install command.
+The Dockerfile has to be present and properly created.
+
+### Notes
+Pay attention to placing JDBC properties to docker-compose file and remove them from the application properties file.
 
 ## Week 8
 ### Objective
