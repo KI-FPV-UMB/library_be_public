@@ -1,5 +1,12 @@
 # Library backend
 
+## Week 9
+### Objective
+* Application dockerization
+* Dockerfile
+* Docker compose
+
+
 ## Week 8
 ### Objective
 * Introduce tests
